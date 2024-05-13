@@ -2,6 +2,7 @@ package com.example.lab4.config;
 
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.auth.BasicSessionCredentials;
 import com.amazonaws.auth.EnvironmentVariableCredentialsProvider;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
@@ -19,15 +20,18 @@ public class AwsConfig {
     @Value("${cloud.aws.credentials.secret-key}")
     private String secretKey;
 
+    @Value("${cloud.aws.credentials.session-token}")
+    private String sessionToken;
+
     @Value("${cloud.aws.region.static}")
     private String region;
 
     @Bean
     public AmazonS3 s3client() {
-        BasicAWSCredentials awsCreds = new BasicAWSCredentials(accessKey, secretKey);
+        BasicSessionCredentials credentials = new BasicSessionCredentials(accessKey, secretKey, sessionToken);
         return AmazonS3ClientBuilder.standard()
                 .withRegion(region)
-                .withCredentials(new AWSStaticCredentialsProvider(awsCreds))
+                .withCredentials(new AWSStaticCredentialsProvider(credentials))
                 .build();
     }
 }

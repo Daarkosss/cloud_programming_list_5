@@ -5,8 +5,8 @@ export const PATH_PREFIX = `http://${backendHost}:${backendPort}/`;
 type Method = 'GET' | 'POST' | 'PUT' | 'DELETE';
 
 export interface AppFile {
-  id: number;
-  name: string;
+  fileId: number;
+  fileName: string;
 }
 
 class API {
@@ -43,7 +43,7 @@ class API {
     }
 
     async deleteFile(fileId: number) {
-        return this.fetch('DELETE', `files/?fileId=${fileId}`);
+        return this.fetch('DELETE', `files/${fileId}`);
     }
 
     async updateFileName(fileId: number, fileName: string) {

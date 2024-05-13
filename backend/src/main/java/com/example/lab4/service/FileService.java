@@ -21,14 +21,23 @@ import java.util.UUID;
 public class FileService {
 
     @Value("${bucket.name}")
-    private String BUCKET_NAME = "files-app-bucket-v1";
+    private String BUCKET_NAME;
     private final FileReferenceRepository fileReferenceRepository;
     private final AmazonS3 amazonS3;
 
     public FileReference uploadFile(String fileName, MultipartFile file) throws IOException {
-        System.out.println("BUCKET_NAME: " + BUCKET_NAME);
+        createBucketIfNeed();
         String s3Key = saveFileInS3AndGetKey(file);
         return saveFileReference(s3Key, fileName);
+    }
+
+    private void createBucketIfNeed() {
+        amazonS3.listBuckets().forEach(bucket -> {
+            System.out.println("Bucket: " + bucket.getName());
+        });
+        if (!amazonS3.doesBucketExistV2(BUCKET_NAME)) {
+            amazonS3.createBucket(BUCKET_NAME);
+        }
     }
 
     private String saveFileInS3AndGetKey(MultipartFile file) throws IOException {

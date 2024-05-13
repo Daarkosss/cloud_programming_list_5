@@ -36,9 +36,14 @@ public class FileController {
         }
     }
 
-    @DeleteMapping
-    public ResponseEntity<FileReference> deleteFile(@RequestParam("fileId") Long fileId) {
-        return ResponseEntity.ok(fileService.deleteFile(fileId));
+    @DeleteMapping("/{fileId}")
+    public ResponseEntity<FileReference> deleteFile(@PathVariable Long fileId) {
+        FileReference deletedFile = fileService.deleteFile(fileId);
+        if (deletedFile != null) {
+            return ResponseEntity.ok(deletedFile);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @PostMapping("/update")

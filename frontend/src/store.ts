@@ -31,7 +31,7 @@ class Store {
   async deleteFile(fileId: number) {
     try {
       await api.deleteFile(fileId);
-      this.files = this.files.filter(file => file.id !== fileId);
+      this.files = this.files.filter(file => file.fileId !== fileId);
     } catch (error) {
       console.error("Failed to delete file:", error);
     }
