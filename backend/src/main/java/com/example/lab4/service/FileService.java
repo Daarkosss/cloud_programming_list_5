@@ -26,6 +26,7 @@ public class FileService {
     private final AmazonS3 amazonS3;
 
     public FileReference uploadFile(String fileName, MultipartFile file) throws IOException {
+        System.out.println("BUCKET_NAME: " + BUCKET_NAME);
         String s3Key = saveFileInS3AndGetKey(file);
         return saveFileReference(s3Key, fileName);
     }
