@@ -47,7 +47,7 @@ class API {
     }
 
     async updateFileName(fileId: number, fileName: string) {
-        return this.fetch('POST', 'files/update', { fileId, fileName });
+        return this.fetch('PUT', `files/update/${fileId}`, { fileName });
     }
 
     async downloadFile(fileId: number) {

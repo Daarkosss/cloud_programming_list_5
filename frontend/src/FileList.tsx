@@ -1,10 +1,14 @@
 import { observer } from 'mobx-react-lite';
 import { store } from './store';
 import { ChangeEvent, useState } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrash, faDownload, faEdit, faSave } from '@fortawesome/free-solid-svg-icons';
 import './styles/FileList.scss';
 
 const FileList = observer(() => {
   const [fileInput, setFileInput] = useState<File | null>(null);
+  const [editFileId, setEditFileId] = useState<number | null>(null);
+  const [newFileName, setNewFileName] = useState<string>('');
 
   const handleFileInput = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -18,6 +22,17 @@ const FileList = observer(() => {
       return;
     }
     store.uploadFile(fileInput, fileInput.name);
+  };
+
+  const startEditing = (fileId: number, currentName: string) => {
+    setEditFileId(fileId);
+    setNewFileName(currentName);
+  };
+
+  const saveFileName = (fileId: number) => {
+    store.updateFileName(fileId, newFileName);
+    setEditFileId(null);
+    setNewFileName('');
   };
 
   return (
@@ -38,10 +53,33 @@ const FileList = observer(() => {
             {store.files.map((file) => (
               <tr key={file.fileId}>
                 <td>{file.fileId}</td>
-                <td>{file.fileName}</td>
                 <td>
-                  <button className='action-button' onClick={() => store.deleteFile(file.fileId)}>Delete</button>
-                  <button className='action-button' onClick={() => store.downloadFile(file.fileId)}>Download</button>
+                  {editFileId === file.fileId ? (
+                    <input 
+                      type="text" 
+                      value={newFileName} 
+                      onChange={(e) => setNewFileName(e.target.value)} 
+                    />
+                  ) : (
+                    file.fileName
+                  )}
+                </td>
+                <td>
+                  {editFileId === file.fileId ? (
+                    <button className='action-button' onClick={() => saveFileName(file.fileId)}>
+                      <FontAwesomeIcon icon={faSave} />
+                    </button>
+                  ) : (
+                    <button className='action-button' onClick={() => startEditing(file.fileId, file.fileName)}>
+                      <FontAwesomeIcon icon={faEdit} />
+                    </button>
+                  )}
+                  <button className='action-button' onClick={() => store.deleteFile(file.fileId)}>
+                    <FontAwesomeIcon icon={faTrash} />
+                  </button>
+                  <button className='action-button' onClick={() => store.downloadFile(file.fileId)}>
+                    <FontAwesomeIcon icon={faDownload} />
+                  </button>
                 </td>
               </tr>
             ))}
