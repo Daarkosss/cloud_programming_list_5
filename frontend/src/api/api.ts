@@ -14,7 +14,7 @@ class API {
     async fetch<T>(
         method: Method,
         path: string,
-        body?: FormData | Record<string, any>,
+        body?: FormData | { [key: string]: unknown },
         headers: HeadersInit = {},
         isFormData: boolean = false
     ): Promise<T> {
@@ -35,28 +35,28 @@ class API {
         return data;
     }
 
-    async uploadFile(file: File, fileName: string) {
+    async uploadFile(file: File, fileName: string): Promise<AppFile> {
         const formData = new FormData();
         formData.append('file', file);
         formData.append('fileName', fileName);
-        return this.fetch('POST', 'files/upload', formData, {}, true);
-    }
-
-    async deleteFile(fileId: number) {
-        return this.fetch('DELETE', `files/${fileId}`);
-    }
-
-    async updateFileName(fileId: number, fileName: string) {
-        return this.fetch('PUT', `files/update/${fileId}`, { fileName });
-    }
-
-    async downloadFile(fileId: number) {
+        return this.fetch<AppFile>('POST', 'files/upload', formData, {}, true);
+      }
+    
+      async deleteFile(fileId: number): Promise<void> {
+        return this.fetch<void>('DELETE', `files/${fileId}`);
+      }
+    
+      async updateFileName(fileId: number, fileName: string): Promise<AppFile> {
+        return this.fetch<AppFile>('PUT', `files/update/${fileId}`, { fileName });
+      }
+    
+      async downloadFile(fileId: number): Promise<void> {
         window.location.href = `${PATH_PREFIX}files/download?fileId=${fileId}`;
-    }
-
-    async fetchFiles() {
+      }
+    
+      async fetchFiles(): Promise<AppFile[]> {
         return this.fetch<AppFile[]>('GET', 'files/all');
-    }
+      }
 }
 
 export const api = new API();
