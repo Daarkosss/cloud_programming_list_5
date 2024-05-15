@@ -64,7 +64,7 @@ public class FileService {
     }
 
 
-    private FileReference getFileById(Long fileId) {
+    public FileReference getFileById(Long fileId) {
         return fileReferenceRepository.findById(fileId).orElseThrow(() -> new NotFoundException("File not found"));
     }
 

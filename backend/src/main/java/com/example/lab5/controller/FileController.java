@@ -3,6 +3,7 @@ package com.example.lab5.controller;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import com.example.lab5.entity.FileReference;
+import com.example.lab5.entity.UpdateFileRequest;
 import com.example.lab5.service.FileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.InputStreamResource;
@@ -44,10 +45,9 @@ public class FileController {
         }
     }
 
-    @PostMapping("/update")
-    public ResponseEntity<FileReference> updateFile(@RequestParam("fileId") Long fileId, @RequestParam("fileName") String fileName) {
-        return ResponseEntity.ok(fileService.updateFile(fileId, fileName));
-
+    @PutMapping("/update/{id}")
+    public ResponseEntity<FileReference> updateFile(@PathVariable Long id, @RequestBody UpdateFileRequest updateFileRequest) {
+        return ResponseEntity.ok(fileService.updateFile(id, updateFileRequest.getFileName()));
     }
 
     @GetMapping("/all")
@@ -62,11 +62,14 @@ public class FileController {
 
     @GetMapping("/download")
     public ResponseEntity<Resource> downloadFile(@RequestParam("fileId") Long fileId) {
+        FileReference fileReference = fileService.getFileById(fileId);
         S3Object file = fileService.downloadFile(fileId);
         S3ObjectInputStream fileStream = file.getObjectContent();
+        
         return ResponseEntity
                 .ok()
                 .contentType(MediaType.parseMediaType(file.getObjectMetadata().getContentType()))
+                .header("Content-Disposition", "attachment; filename=\"" + fileReference.getFileName() + "\"")
                 .body(new InputStreamResource(fileStream));
     }
 
