@@ -1,34 +1,50 @@
+.file-input-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 15px;
+}
+
 .files-container {
-    margin: 20px;
-    max-height: 500px;
-    overflow-y: auto; 
-  }
+  margin: 30px;
+  max-height: 500px;
+  overflow-y: auto;
+  min-width: 600px;
+}
+
+h1 {
+  color: #ffc400
+}
   
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-  
-    thead {
-      tr {
-        th {
-          padding: 18px;
-          text-align: center;
-          border-bottom: 1px solid #ddd;
-        }
-      }
-    }
-  
-    tbody {
-      tr {
-        td {
-          padding: 18px;
-          border-bottom: 1px solid #ddd;
-        }
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+
+  thead {
+    tr {
+      th {
+        padding: 18px;
+        text-align: center;
+        border-bottom: 1px solid #ddd;
       }
     }
   }
-  
-  .action-button {
-    margin-right: 10px;
+
+  tbody {
+    tr {
+      td {
+        padding: 18px;
+        border-bottom: 1px solid #ddd;
+      }
+    }
   }
+}
+
+.action-button {
+  margin-right: 10px;
+}
+
+.file-input {
+  display: none;
+}
